@@ -1,70 +1,128 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Setup Guide
 
-## Available Scripts
+### 1. Initial Setup
 
-In the project directory, you can run:
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd journal-website
+   ```
 
-### `npm start`
+2. Install backend dependencies:
+   ```
+   npm install
+   ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+3. Create a `.env` file in the root directory and add your environment variables:
+   ```
+   AZURE_STORAGE_CONNECTION_STRING=your_connection_string
+   AZURE_STORAGE_CONTAINER_NAME=your_container_name
+   POSTGRES_USER=your_postgres_user
+   POSTGRES_PASSWORD=your_postgres_password
+   POSTGRES_DB=your_database_name
+   POSTGRES_HOST=localhost
+   POSTGRES_PORT=5432
+   ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 2. Database Setup
 
-### `npm test`
+1. Install PostgreSQL if not already installed.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Create a new database:
+   ```
+   createdb your_database_name
+   ```
 
-### `npm run build`
+3. Connect to the database and create the `files` table:
+   ```sql
+   CREATE TABLE files (
+     id SERIAL PRIMARY KEY,
+     filename VARCHAR(255) NOT NULL,
+     blob_url VARCHAR(255) NOT NULL,
+     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 3. Azure Blob Storage Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Create an Azure account if you don't have one.
+2. Create a new Storage account in the Azure portal.
+3. In the storage account, create a new container.
+4. Get the connection string from the "Access keys" section of your storage account.
+5. Add the connection string and container name to your `.env` file.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 4. Backend Setup
 
-### `npm run eject`
+1. Create `server.js` in the root directory with the provided code.
+2. Update `package.json` with the necessary scripts.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 5. Frontend Setup
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Create the React app:
+   ```
+   npx create-react-app client
+   cd client
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. Replace the contents of `src/App.js` with the provided code.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Update `client/package.json` to include a proxy for local development:
+   ```json
+   "proxy": "http://localhost:3001"
+   ```
 
-## Learn More
+### 6. Running the Application
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Start the backend server:
+   ```
+   npm run server
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. In a new terminal, start the frontend:
+   ```
+   cd client
+   npm start
+   ```
 
-### Code Splitting
+3. Access the application at `http://localhost:3000`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 7. Building for Production
 
-### Analyzing the Bundle Size
+1. Build the React app:
+   ```
+   cd client
+   npm run build
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. Start the production server:
+   ```
+   cd ..
+   npm start
+   ```
 
-### Making a Progressive Web App
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- `POST /upload`: Upload a file
+- `GET /files`: Get all file metadata
 
-### Advanced Configuration
+## Troubleshooting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Ensure all environment variables are correctly set in the `.env` file.
+- Check that PostgreSQL is running and accessible.
+- Verify that your Azure Blob Storage connection string is correct and the container exists.
 
-### Deployment
+## Future Improvements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Add user authentication and authorization
+- Implement file type restrictions
+- Add pagination for file listing
+- Improve error handling and user feedback
 
-### `npm run build` fails to minify
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
